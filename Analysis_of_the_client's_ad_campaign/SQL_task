@@ -1,0 +1,58 @@
+Исходные данные:
+Таблица 1. orders (order_id, promocode_id) - уникальные заказы	
+Таблица 2. promocodes (promocode_id, name, discount) - уникальные промокоды	
+
+Необходимо вывести:	
+1) Долю заказов с промокодами	
+2) Самый популярный промокод (название) и число его использований	
+
+Ответ:
+
+1) 
+SELECT 
+	COUNT(order_id) AS orders_with_promocode
+FROM 
+	orders AS o
+	LEFT JOIN promocodes AS p ON o.promocode_id = p.promocode_id
+WHERE 
+	p.promocode_id is not NULL;
+	
+2) 
+SELECT
+    name, 
+    COUNT(order_id) AS promocodes_count
+FROM 
+	orders AS o LEFT JOIN promocodes AS p ON o.promocode_id = p.promocode_id
+WHERE 
+	p.promocode_id IS NOT NULL
+GROUP BY 
+	name
+ORDER BY 
+	promocodes_count DESC
+LIMIT 
+	1;
+
+
+
+Задание 2 (SQL запрос)	
+
+Исходные данные:
+Таблица 1. consumption (coffee_point_id INT, cookies INT)	
+Таблица 2. buildings (coffee_point_id INT, coffee_point_name VARCHAR(32), office_id INT, office_name VARCHAR(32))	
+
+Необходимо вывести топ-10 офисов по потреблению печенек среди офисов, которые потребляют менее 1000 печенек	
+
+Ответ:
+
+SELECT 
+	office_name, SUM(cookies) as all_cookies
+FROM 
+	buildings AS b JOIN consumption AS c ON c.coffee_point_id = b.coffee_point_id 
+WHERE 
+	all_cookies < 1000 
+GROUP BY
+	office_name
+ORDER BY 
+	all_cookies DESC
+LIMIT 
+	10;
